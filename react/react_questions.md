@@ -1,11 +1,33 @@
 # React Interview Questions
 
 ## 1. What is React?
-   **Answer:**  
-   _[Your answer here]_
 
-   **Explanation:**  
-   _[Your explanation here]_
+**Answer:**
+
+- React is an open-source JavaScript library for building user interfaces, especially for single-page applications.
+- Developed and maintained by Facebook and a community of developers.
+- Uses a Virtual DOM to optimize performance by minimizing direct updates to the actual DOM.
+- Follows a declarative approach, where you describe the UI for a given state, and React handles updates efficiently.
+- Uses JSX (JavaScript XML), a syntax that allows mixing HTML-like code with JavaScript.
+- Built on a component-based architecture, allowing the development of reusable, modular UI components.
+
+**Explanation:**  
+
+### a. What is the difference between a framework and a library?
+
+- A **library** provides a set of tools or functions that help you accomplish specific tasks. You call the library when you need it (e.g., React, lodash).
+- A **framework**, on the other hand, is a more comprehensive solution that dictates the structure and flow of your application. It gives you a skeleton to build upon and often controls the flow of execution (e.g., Angular, Vue.js).
+- In short, the difference is that a **library** lets you choose how and when to use it, while a **framework** imposes certain conventions and structures.
+
+### b. What is the difference between a declarative and imperative approach ?
+
+- A **declarative approach** means describing what the UI should look like for a given state, and React takes care of the logic of how to update the UI. Instead of focusing on the steps to update the UI, you simply describe the desired result, and React handles all the necessary updates behind the scenes.
+- The counterpart to the declarative approach is the **imperative approach**. In an imperative approach, you need to specify how to update the UI step by step. You directly manipulate the DOM elements and their states, which can lead to more complex and error-prone code as the app grows. For example, traditional JavaScript DOM manipulation is usually imperative.
+
+### c. What is the significance of components in React??
+
+- Components are the building blocks of a React application. They allow you to break down the UI into smaller, reusable pieces, each responsible for a specific part of the interface. Components can be either **functional (using hooks)** or **class-based (older approach)**, and they can manage their own state and lifecycle.
+
 
 ---
 
