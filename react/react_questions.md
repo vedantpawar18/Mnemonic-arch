@@ -1078,28 +1078,9 @@ function MyComponent() {
 
 ## 33. What are the different ways to pass data from a child component to a parent component in React?
    **Answer:**  
-In React, data is typically passed **from parent to child components** via **props**. However, there are several ways to send data **from a child to a parent component**. Here are the main methods:
-
-### 1. **Using Callback Functions (Most Common)**
-The most common way to send data from a child component to a parent component is by using a **callback function**. The parent component passes a function to the child component as a prop, and the child calls that function with the data it wants to send back.
-
-#### **Example:**
-
-```jsx
-function Parent() {
-  const handleDataFromChild = (data) => {
-    console.log('Data from child:', data);
-  };
-
-  return <Child sendData={handleDataFromChild} />;
-}
-
-function Child({ sendData }) {
-  const data = 'Hello from Child!';
-  
-  return <button onClick={() => sendData(data)}>Send Data to Parent</button>;
-}
-```
+- **Callback functions**: Parent passes function to child to send data.
+- **Context API**: For deeply nested components.
+- **Redux**: For complex, global state management.
    **Explanation:**  
    _[Your explanation here]_
 
