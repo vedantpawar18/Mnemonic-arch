@@ -361,3 +361,12 @@
    _[Your explanation here]_
 
 ---
+
+## 41.Node Security?
+   **Answer:**  
+   _[Your answer here]_
+
+   **Explanation:**  
+   _[Your explanation here]_
+
+---
