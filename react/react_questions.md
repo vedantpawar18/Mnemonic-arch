@@ -467,9 +467,33 @@ function Parent() {
 ---
 
 ## 15. What are error boundaries in React?
-   **Answer:**  
-   _[Your answer here]_
+   **Answer:**    
+**Error Boundaries** are React components that catch errors in their child components' rendering, lifecycle methods, or event handlers. They prevent the entire app from crashing and allow for displaying a fallback UI.
 
+### **Key Points:**
+- They catch JavaScript errors and log them.
+- Implemented using `componentDidCatch()` and `getDerivedStateFromError()`.
+- Used to show a fallback UI when an error occurs.
+
+### **Example:**
+```jsx
+class ErrorBoundary extends React.Component {
+  state = { hasError: false };
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, info) {
+    console.log(error, info);
+  }
+
+  render() {
+    if (this.state.hasError) return <h1>Something went wrong.</h1>;
+    return this.props.children;
+  }
+}
+ ```
    **Explanation:**  
    _[Your explanation here]_
 
@@ -477,8 +501,33 @@ function Parent() {
 
 ## 16. What are higher-order components in React?
    **Answer:**  
-   _[Your answer here]_
+A **Higher-Order Component (HOC)** is a function that takes a **component** and returns a **new component** with additional props or functionality. HOCs are used to **reuse component logic** across multiple components.
 
+### **Key Points:**
+- **Purpose**: To share common functionality (e.g., authentication, data fetching, etc.) without repeating code.
+- **Pattern**: An HOC takes a component as an argument and returns a new component with enhanced behavior.
+- **Does not modify the original component**: The original component remains unchanged.
+
+### **Example:**
+
+```jsx
+import React from 'react';
+
+const withLoading = (Component) => {
+  return function WithLoading(props) {
+    if (props.isLoading) {
+      return <div>Loading...</div>;
+    }
+    return <Component {...props} />;
+  };
+};
+
+const MyComponent = ({ data }) => {
+  return <div>{data}</div>;
+};
+
+const MyComponentWithLoading = withLoading(MyComponent);
+ ```
    **Explanation:**  
    _[Your explanation here]_
 
@@ -486,8 +535,27 @@ function Parent() {
 
 ## 17. What are controlled and uncontrolled components in React?
    **Answer:**  
-   _[Your answer here]_
 
+In React, **controlled** and **uncontrolled** components refer to how the component's state is managed, particularly for form elements like inputs, selects, and textareas.
+
+### **Controlled Components:**
+- **Definition**: A controlled component is one where the form element's value is controlled by React state.
+- **How it works**: The value of the input is set via React state and changes to the input are handled by an event handler.
+- **Example**: 
+
+```jsx
+import React, { useState } from 'react';
+
+const ControlledComponent = () => {
+  const [value, setValue] = useState('');
+
+  const handleChange = (e) => {
+    setValue(e.target.value);
+  };
+
+  return <input type="text" value={value} onChange={handleChange} />;
+};
+ ```
    **Explanation:**  
    _[Your explanation here]_
 
@@ -495,8 +563,18 @@ function Parent() {
 
 ## 18. What is useMemo in React?
    **Answer:**  
-   _[Your answer here]_
 
+`useMemo` is a React hook that **memoizes** the result of a function so that it is only recomputed when its **dependencies** change. It helps **optimize performance** by preventing expensive recalculations on every render.
+
+### **Key Points:**
+- **Purpose**: To **optimize performance** by memoizing values that are expensive to compute and ensuring they are recomputed only when necessary.
+- **How it works**: `useMemo` returns a memoized value, and the function is recomputed only when one of the dependencies has changed.
+- **Use Case**: Useful for performance optimization, especially when dealing with complex calculations or large datasets.
+
+### **Syntax:**
+```jsx
+const memoizedValue = useMemo(() => computeExpensiveValue(a, b), [a, b]);
+ ```
    **Explanation:**  
    _[Your explanation here]_
 
@@ -504,8 +582,38 @@ function Parent() {
 
 ## 19. What is useCallback in React?
    **Answer:**  
-   _[Your answer here]_
 
+`useCallback` is a React hook that **memoizes** a callback function so that it is only redefined when one of its dependencies changes. It is useful for preventing unnecessary re-creations of functions, which can improve performance, especially in components with heavy rendering or when passing functions as props to child components.
+
+### **Key Points:**
+- **Purpose**: To **memoize** functions and ensure that they are only recreated when their dependencies change.
+- **Use Case**: Prevents re-creation of functions on every render, improving performance in scenarios with frequent renders or passing functions to memoized components.
+
+### **Syntax:**
+```jsx
+import React, { useState, useCallback } from 'react';
+
+const ExpensiveComponent = React.memo(({ onClick }) => {
+  console.log('Component re-rendered');
+  return <button onClick={onClick}>Click me</button>;
+});
+
+const Parent = () => {
+  const [count, setCount] = useState(0);
+
+  const handleClick = useCallback(() => {
+    console.log('Button clicked!');
+  }, []);  // Only redefined if dependencies change
+
+  return (
+    <div>
+      <ExpensiveComponent onClick={handleClick} />
+      <button onClick={() => setCount(count + 1)}>Increment</button>
+      <p>Count: {count}</p>
+    </div>
+  );
+};
+ ```
    **Explanation:**  
    _[Your explanation here]_
 
@@ -513,7 +621,27 @@ function Parent() {
 
 ## 20. What is the difference between useMemo and useCallback?
    **Answer:**  
-   _[Your answer here]_
+
+Both **`useMemo`** and **`useCallback`** are React hooks used to **optimize performance** by memoizing values or functions, but they serve slightly different purposes:
+
+### **`useMemo`:**
+- **Purpose**: Memoizes the **result of a function** so that it is only recomputed when its **dependencies** change.
+- **Use Case**: Used for **expensive calculations** or derived data that doesn’t need to be recomputed on every render.
+- **Returns**: A memoized value.
+
+### **`useCallback`:**
+- **Purpose**: Memoizes the **function itself**, ensuring the function is only recreated when its **dependencies** change.
+- **Use Case**: Used when passing a function to **memoized components** or preventing unnecessary function recreations in components with frequent renders.
+- **Returns**: A memoized function.
+
+### **Key Differences:**
+| Feature             | `useMemo`                                | `useCallback`                             |
+|---------------------|------------------------------------------|-------------------------------------------|
+| **Purpose**          | Memoizes the **result** of a function    | Memoizes the **function** itself          |
+| **Return Value**     | Memoized **value**                       | Memoized **function**                     |
+| **Use Case**         | Expensive calculations or derived data  | Prevent function recreation in child components |
+| **Example**          | `const memoizedValue = useMemo(() => computeExpensiveValue(a, b), [a, b])` | `const memoizedCallback = useCallback(() => { /* do something */ }, [a, b])` |
+
 
    **Explanation:**  
    _[Your explanation here]_
