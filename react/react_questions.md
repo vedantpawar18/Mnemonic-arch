@@ -650,7 +650,45 @@ Both **`useMemo`** and **`useCallback`** are React hooks used to **optimize perf
 
 ## 21. What is useReducer hook in React?
    **Answer:**  
-   _[Your answer here]_
+
+The **`useReducer`** hook is a React hook used for managing more complex state logic in a component. It is an alternative to **`useState`** and is often used when state transitions depend on previous states or involve more complex updates.
+
+### **Key Points:**
+- **Purpose**: Used for handling **complex state logic** (e.g., state updates that depend on the previous state or multiple state values).
+- **How it works**: It takes a **reducer function** and an initial state as arguments, and returns the current state and a dispatch function to trigger state updates.
+- **Common Use**: It's commonly used in scenarios like form management, handling multiple related state values, or implementing state transitions similar to Redux.
+
+### **Syntax:**
+```jsx 
+import React, { useReducer } from 'react';
+
+// Initial state
+const initialState = { count: 0 };
+
+// Reducer function
+const reducer = (state, action) => {
+  switch (action.type) {
+    case 'increment':
+      return { count: state.count + 1 };
+    case 'decrement':
+      return { count: state.count - 1 };
+    default:
+      return state;
+  }
+};
+
+const Counter = () => {
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  return (
+    <div>
+      <p>Count: {state.count}</p>
+      <button onClick={() => dispatch({ type: 'increment' })}>Increment</button>
+      <button onClick={() => dispatch({ type: 'decrement' })}>Decrement</button>
+    </div>
+  );
+};
+```
 
    **Explanation:**  
    _[Your explanation here]_
@@ -659,7 +697,15 @@ Both **`useMemo`** and **`useCallback`** are React hooks used to **optimize perf
 
 ## 22. What is useState vs useReducer?
    **Answer:**  
-   _[Your answer here]_
+Both **`useState`** and **`useReducer`** are React hooks used for state management, but they are suited for different scenarios:
+
+  | Feature             | `useState`                                | `useReducer`                             |
+|---------------------|------------------------------------------|------------------------------------------|
+| **State Complexity** | Best for **simple state**               | Best for **complex state logic**         |
+| **State Updates**    | Direct update with `setState`            | Updates via **dispatching actions**      |
+| **Use Case**         | Single value or simple states like toggles, counters | Complex logic with **multiple state transitions** |
+| **Performance**      | Good for smaller, isolated states        | Better for managing related state and actions |
+
 
    **Explanation:**  
    _[Your explanation here]_
@@ -668,8 +714,32 @@ Both **`useMemo`** and **`useCallback`** are React hooks used to **optimize perf
 
 ## 23. What are keys in React?
    **Answer:**  
-   _[Your answer here]_
+In React, **keys** are a special string attribute used to identify **elements** in a list. They help React efficiently update and re-render elements by providing a way to track which items have changed, been added, or been removed.
 
+### **Key Points:**
+- **Purpose**: Keys are used to **identify elements uniquely** in lists, helping React optimize rendering performance by efficiently diffing and updating components.
+- **When to Use**: Keys are needed when rendering lists of elements dynamically with methods like `map()`.
+- **How it works**: When React compares the virtual DOM with the real DOM, it uses keys to determine which elements need to be updated, added, or removed.
+
+### **Why Keys Matter:**
+- Without keys, React might not be able to correctly match elements between renders, leading to unnecessary re-renders or UI inconsistencies.
+- Keys help React minimize the number of DOM manipulations, improving performance.
+
+### **Example:**
+
+```jsx
+const items = ['Apple', 'Banana', 'Orange'];
+
+function FruitList() {
+  return (
+    <ul>
+      {items.map((item, index) => (
+        <li key={index}>{item}</li>
+      ))}
+    </ul>
+  );
+}
+```
    **Explanation:**  
    _[Your explanation here]_
 
@@ -677,8 +747,22 @@ Both **`useMemo`** and **`useCallback`** are React hooks used to **optimize perf
 
 ## 24. What is lazy loading in React?
    **Answer:**  
-   _[Your answer here]_
 
+Lazy loading in React is a technique used to **load components only when they are needed**, rather than loading everything upfront. This helps improve the initial loading time and performance of a React application by splitting the code into smaller chunks.
+
+### **Key Points:**
+- **Purpose**: To **optimize performance** by loading parts of the application only when necessary (e.g., when a user navigates to a page or interacts with a component).
+- **How it works**: React’s **`React.lazy()`** function is used to dynamically import components, and **`Suspense`** is used to handle the loading state.
+
+### **Syntax:**
+
+```jsx
+const Component = React.lazy(() => import('./Component'));
+
+<Suspense fallback={<div>Loading...</div>}>
+  <Component />
+</Suspense>
+```
    **Explanation:**  
    _[Your explanation here]_
 
@@ -686,7 +770,19 @@ Both **`useMemo`** and **`useCallback`** are React hooks used to **optimize perf
 
 ## 25. What is Suspense in React?
    **Answer:**  
-   _[Your answer here]_
+ **Suspense** is a React component used for **handling asynchronous operations**, such as lazy loading components or fetching data. It allows React to pause the rendering of a component tree until a certain condition is met, like when a component or data is ready to be rendered.
+
+### **Key Points:**
+- **Purpose**: To manage **async rendering** in React, making it easier to **delay rendering** until certain resources (e.g., components, data) are available.
+- **How it works**: It works alongside **`React.lazy()`** for code-splitting or with **data-fetching libraries** to display a **fallback UI** while waiting for the content to load.
+- **Suspense** provides a **smooth loading experience** by displaying a fallback UI (e.g., a loading spinner) while React waits for the resources to load.
+
+### **Syntax:**
+```jsx
+<Suspense fallback={<div>Loading...</div>}>
+  <Component />
+</Suspense>
+```
 
    **Explanation:**  
    _[Your explanation here]_
@@ -695,8 +791,44 @@ Both **`useMemo`** and **`useCallback`** are React hooks used to **optimize perf
 
 ## 26. What are custom hooks in React?
    **Answer:**  
-   _[Your answer here]_
 
+**Custom hooks** in React are JavaScript functions that allow you to **reuse stateful logic** across multiple components. They are a way to **extract logic** from components into reusable functions, promoting cleaner and more maintainable code.
+
+### **Key Points:**
+- **Purpose**: To encapsulate reusable logic, like fetching data, handling forms, or managing state, into a single function.
+- **How it works**: A custom hook is a function that **uses React hooks** like `useState`, `useEffect`, etc., and can be shared between components.
+- **Naming Convention**: Custom hooks should start with the word **`use`** (e.g., `useFetch`, `useLocalStorage`) to follow React's conventions and ensure proper hook rules are followed.
+
+### **Example:**
+
+```jsx
+import { useState, useEffect } from 'react';
+
+// Custom Hook to fetch data
+function useFetch(url) {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        setData(data);
+        setLoading(false);
+      });
+  }, [url]);
+
+  return { data, loading };
+}
+
+function App() {
+  const { data, loading } = useFetch('https://api.example.com/data');
+
+  if (loading) return <div>Loading...</div>;
+
+  return <div>Data: {JSON.stringify(data)}</div>;
+}
+```
    **Explanation:**  
    _[Your explanation here]_
 
@@ -704,8 +836,17 @@ Both **`useMemo`** and **`useCallback`** are React hooks used to **optimize perf
 
 ## 27. What are Portals in React?
    **Answer:**  
-   _[Your answer here]_
+A **Portal** in React provides a way to **render a component outside of its parent DOM hierarchy**, while still maintaining the React component tree structure. Portals allow you to render children into a different part of the DOM without affecting the parent component’s layout or structure.
 
+### **Key Points:**
+- **Purpose**: To render a component into a **different part of the DOM** tree, outside the parent’s hierarchy (e.g., modals, tooltips, popups).
+- **How it works**: The `ReactDOM.createPortal()` method is used to create a portal by specifying the **child component** and the **DOM node** where it should be rendered.
+- **Use Case**: Ideal for scenarios where you need to render elements like **modals, tooltips, or dropdowns** outside the main application layout but still keep their React lifecycle intact.
+
+### **Syntax:**
+```jsx
+ReactDOM.createPortal(child, container)
+```
    **Explanation:**  
    _[Your explanation here]_
 
@@ -713,8 +854,59 @@ Both **`useMemo`** and **`useCallback`** are React hooks used to **optimize perf
 
 ## 28. What is Context API in React?
    **Answer:**  
-   _[Your answer here]_
+The **Context API** in React is a feature that allows you to **share state across the entire component tree** without having to pass props manually at every level. It is primarily used to avoid **prop drilling** and make state accessible globally to all components in a React application.
 
+### **Key Points:**
+- **Purpose**: To provide a way to pass data through the component tree without passing props down manually at each level.
+- **How it works**: It involves creating a **Context** object that holds the value and a **Provider** component that makes the value accessible to any component within its tree.
+- **When to Use**: When you need to share global data (like themes, authentication status, or language preferences) across multiple components.
+
+### **Syntax:**
+1. **Create a Context** using `React.createContext()`.
+2. **Provide** a value using the `Provider` component.
+3. **Consume** the context value using `useContext()` hook or `Context.Consumer`.
+
+### **Example:**
+
+```jsx
+import React, { createContext, useState, useContext } from 'react';
+
+// Step 1: Create a context
+const ThemeContext = createContext();
+
+function App() {
+  // Step 2: Provide context value
+  const [theme, setTheme] = useState('light');
+
+  return (
+    <ThemeContext.Provider value={{ theme, setTheme }}>
+      <Header />
+      <Content />
+    </ThemeContext.Provider>
+  );
+}
+
+function Header() {
+  // Step 3: Consume context value
+  const { theme, setTheme } = useContext(ThemeContext);
+  return (
+    <div>
+      <h1>Current theme: {theme}</h1>
+      <button onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+        Toggle Theme
+      </button>
+    </div>
+  );
+}
+
+function Content() {
+  // Step 3: Consume context value
+  const { theme } = useContext(ThemeContext);
+  return <div className={`content ${theme}`}>This is the content area.</div>;
+}
+
+export default App;
+```
    **Explanation:**  
    _[Your explanation here]_
 
@@ -722,8 +914,61 @@ Both **`useMemo`** and **`useCallback`** are React hooks used to **optimize perf
 
 ## 29. Give an example of using Context API in React.
    **Answer:**  
-   _[Your answer here]_
+This example demonstrates how to use the **Context API** to manage and share the theme (light or dark) across different components without passing props manually.
 
+### **Steps:**
+
+1. **Create a Context** using `React.createContext()`.
+2. **Provide the context value** at the root of the component tree using the `Provider` component.
+3. **Consume the context value** in child components using the `useContext()` hook.
+
+### **Code Example:**
+
+```jsx
+import React, { createContext, useState, useContext } from 'react';
+
+// Step 1: Create a context
+const ThemeContext = createContext();
+
+function App() {
+  // Step 2: Provide context value
+  const [theme, setTheme] = useState('light');
+
+  return (
+    <ThemeContext.Provider value={{ theme, setTheme }}>
+      <Header />
+      <Content />
+    </ThemeContext.Provider>
+  );
+}
+
+function Header() {
+  // Step 3: Consume context value
+  const { theme, setTheme } = useContext(ThemeContext);
+
+  return (
+    <header style={{ background: theme === 'light' ? '#fff' : '#333', color: theme === 'light' ? '#000' : '#fff' }}>
+      <h1>Theme: {theme}</h1>
+      <button onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+        Toggle Theme
+      </button>
+    </header>
+  );
+}
+
+function Content() {
+  // Step 3: Consume context value
+  const { theme } = useContext(ThemeContext);
+
+  return (
+    <div style={{ padding: '20px', background: theme === 'light' ? '#f0f0f0' : '#222', color: theme === 'light' ? '#000' : '#fff' }}>
+      <p>This is the content area. The theme is {theme}.</p>
+    </div>
+  );
+}
+
+export default App;
+```
    **Explanation:**  
    _[Your explanation here]_
 
@@ -731,8 +976,21 @@ Both **`useMemo`** and **`useCallback`** are React hooks used to **optimize perf
 
 ## 30. What is the purpose of the callback function as an argument of `setState()`?
    **Answer:**  
-   _[Your answer here]_
 
+In React, the `setState()` method can optionally accept a **callback function** as a second argument. This callback is executed **after the state has been updated** and the component has re-rendered.
+
+### **Purpose:**
+- **State Update Completion**: The callback ensures that you have access to the updated state after React finishes re-rendering the component.
+- **Synchronous Logic**: Since `setState()` is asynchronous, the callback lets you execute code that depends on the **updated state** or the **UI** once the state change is complete.
+
+### **Syntax:**
+
+```javascript
+this.setState({ key: value }, () => {
+  // Callback function runs after state is updated
+  console.log('State has been updated');
+});
+```
    **Explanation:**  
    _[Your explanation here]_
 
@@ -740,8 +998,61 @@ Both **`useMemo`** and **`useCallback`** are React hooks used to **optimize perf
 
 ## 31. Which lifecycle hooks in class components are replaced by `useEffect` in functional components?
    **Answer:**  
-   _[Your answer here]_
+In React, the **`useEffect`** hook in functional components replaces several lifecycle methods that are available in class components. Here's a breakdown of which class component lifecycle methods are handled by `useEffect`:
 
+### **Class Component Lifecycle Methods vs `useEffect`:**
+
+| Class Component Lifecycle | `useEffect` Hook in Functional Components |
+|---------------------------|-------------------------------------------|
+| **`componentDidMount()`** | `useEffect(() => { /* code */ }, [])` – Runs once after the initial render. |
+| **`componentDidUpdate()`** | `useEffect(() => { /* code */ }, [dependencies])` – Runs after every render when dependencies change. |
+| **`componentWillUnmount()`** | `useEffect(() => { return () => { /* cleanup */ }; }, [])` – Runs cleanup code before the component unmounts. |
+
+### **How `useEffect` Replaces Class Lifecycle Methods:**
+
+1. **`componentDidMount()`**:
+   - Runs once after the component is mounted (initial render).
+   - **Replaced by**: `useEffect(() => { /* code */ }, [])` – The empty dependency array ensures this effect runs only once when the component mounts.
+
+2. **`componentDidUpdate()`**:
+   - Runs after every render when the state or props change.
+   - **Replaced by**: `useEffect(() => { /* code */ }, [dependencies])` – This effect runs whenever any value in the dependency array changes.
+
+3. **`componentWillUnmount()`**:
+   - Runs just before the component is removed from the DOM (used for cleanup).
+   - **Replaced by**: `useEffect(() => { return () => { /* cleanup */ }; }, [])` – The cleanup function inside `useEffect` runs before the component unmounts.
+
+### **Example Using `useEffect`:**
+
+```jsx
+import React, { useState, useEffect } from 'react';
+
+function MyComponent() {
+  const [count, setCount] = useState(0);
+
+  // Replaces componentDidMount
+  useEffect(() => {
+    console.log('Component mounted');
+
+    // Replaces componentWillUnmount (cleanup)
+    return () => {
+      console.log('Component unmounted');
+    };
+  }, []);
+
+  // Replaces componentDidUpdate
+  useEffect(() => {
+    console.log('Count updated:', count);
+  }, [count]);
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={() => setCount(count + 1)}>Increment</button>
+    </div>
+  );
+}
+```
    **Explanation:**  
    _[Your explanation here]_
 
@@ -749,7 +1060,16 @@ Both **`useMemo`** and **`useCallback`** are React hooks used to **optimize perf
 
 ## 32. What is Strict Mode in React?
    **Answer:**  
-   _[Your answer here]_
+**Strict Mode** in React is a tool for identifying potential problems in an application during development. It helps highlight issues like unsafe lifecycle methods, side effects, and other potential problems that might not be obvious during development but could affect the app in the future.
+
+### **Key Points:**
+- **Development-only feature**: Strict Mode only runs in **development** mode and does not affect the production build.
+- **Purpose**: To **identify unsafe practices** and provide warnings for better practices and future compatibility.
+- **No impact on performance**: It doesn’t change the rendered UI or introduce any new behaviors, but it helps detect issues during development.
+- **Enables additional checks**: It activates extra checks and warnings for components, such as:
+  - Detecting **unsafe lifecycle methods** (e.g., `componentWillMount`, `componentWillReceiveProps`, `componentWillUpdate`).
+  - Highlighting potential **side effects** that could cause issues with React's rendering.
+  - Detecting **legacy string refs**.
 
    **Explanation:**  
    _[Your explanation here]_
@@ -758,8 +1078,28 @@ Both **`useMemo`** and **`useCallback`** are React hooks used to **optimize perf
 
 ## 33. What are the different ways to pass data from a child component to a parent component in React?
    **Answer:**  
-   _[Your answer here]_
+In React, data is typically passed **from parent to child components** via **props**. However, there are several ways to send data **from a child to a parent component**. Here are the main methods:
 
+### 1. **Using Callback Functions (Most Common)**
+The most common way to send data from a child component to a parent component is by using a **callback function**. The parent component passes a function to the child component as a prop, and the child calls that function with the data it wants to send back.
+
+#### **Example:**
+
+```jsx
+function Parent() {
+  const handleDataFromChild = (data) => {
+    console.log('Data from child:', data);
+  };
+
+  return <Child sendData={handleDataFromChild} />;
+}
+
+function Child({ sendData }) {
+  const data = 'Hello from Child!';
+  
+  return <button onClick={() => sendData(data)}>Send Data to Parent</button>;
+}
+```
    **Explanation:**  
    _[Your explanation here]_
 
