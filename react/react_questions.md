@@ -268,17 +268,22 @@ Both **state** and **props** are used to manage data in React, but they serve di
 - **Immutability**: Props are **read-only** and cannot be modified by the component receiving them.
 - **Purpose**: Props allow a component to be **customized** and **configured** by its parent. They are the mechanism for communication between components.
 - **Usage**: Used to pass static data or callback functions to child components.
-  
-#### Example of Props:
-```jsx
-function ParentComponent() {
-  const message = "Hello, Child!";
-  return <ChildComponent text={message} />;
-}
 
-function ChildComponent(props) {
-  return <h1>{props.text}</h1>;
-}
+### **State**:
+- **Definition**: Data managed **within the component.**
+- **Mutability**: State is **mutable** and can be modified by the component using functions like setState (or useState in functional components).
+- **Purpose**:Used to store dynamic data that can change over time, such as user input or application data.
+- **Usage**: Used for data that needs to change and re-render the component when updated.
+
+### **Key Differences between Props and State**
+
+| Feature       | **Props**                        | **State**                      |
+|---------------|----------------------------------|--------------------------------|
+| **Definition**| Passed from parent to child      | Managed within the component   |
+| **Mutability**| Immutable                        | Mutable                       |
+| **Purpose**   | Pass data to child components    | Manage dynamic, internal data |
+| **Changes**   | Cannot be changed by child       | Can be changed within component|
+| **Re-render** | Parent re-renders on change      | Component re-renders on state change |
 
 
    **Explanation:**  
@@ -287,8 +292,42 @@ function ChildComponent(props) {
 ---
 
 ## 10. What is props drilling and how can it be avoided?
-   **Answer:**  
-   _[Your answer here]_
+   **Answer:**   
+
+**Props Drilling** occurs when data is passed down through multiple layers of components, even if intermediate components don't need the data themselves. This leads to unnecessary complexity and makes the code harder to maintain.
+
+### **How to Avoid Props Drilling:**
+
+1. **React Context API**:
+   - Provides a way to share data globally across components without passing props manually through each level.
+   - Example:
+     ```jsx
+     const MyContext = createContext();
+     <MyContext.Provider value={data}>
+       <Child />
+     </MyContext.Provider>
+     ```
+
+2. **State Management Libraries** (e.g., Redux, Recoil):
+   - Use a centralized store to manage global state, reducing the need to pass props down the tree.
+   - Example with Redux:
+     ```jsx
+     const message = useSelector(state => state.message);
+     ```
+
+3. **Lifting State Up**:
+   - Move the shared state to the nearest common ancestor and pass it down only to components that need it.
+   - Example:
+     ```jsx
+     function Parent() {
+       const [message, setMessage] = useState("Hello!");
+       return <Child message={message} />;
+     }
+     ```
+
+4. **Component Composition**:
+   - Pass data through component interfaces as needed, instead of through intermediate layers.
+
 
    **Explanation:**  
    _[Your explanation here]_
@@ -296,8 +335,25 @@ function ChildComponent(props) {
 ---
 
 ## 11. What are synthetic events in React?
-   **Answer:**  
-   _[Your answer here]_
+   **Answer:**    
+In React, **Synthetic Events** are a cross-browser wrapper around the browser's native events. They normalize events so that they behave consistently across different browsers. React's Synthetic Event system is built on top of the W3C spec and is designed to handle events in a more optimized and efficient way.
+
+### **Key Points:**
+- **Cross-browser compatibility**: Synthetic events ensure that events work the same across all browsers, even older ones.
+- **Normalization**: They normalize browser-specific quirks and provide a consistent API for handling events.
+- **Pooling**: React uses event pooling to improve performance by reusing event objects. This means that the event object is reused across different events, so it should not be accessed asynchronously (e.g., inside `setTimeout`).
+
+### **Example:**
+```jsx
+function MyButton() {
+  const handleClick = (event) => {
+    console.log(event.type); // 'click'
+    console.log(event.target); // DOM element that was clicked
+  };
+
+  return <button onClick={handleClick}>Click Me</button>;
+}
+   ```
 
    **Explanation:**  
    _[Your explanation here]_
@@ -306,8 +362,25 @@ function ChildComponent(props) {
 
 ## 12. What are Pure components in React?
    **Answer:**  
-   _[Your answer here]_
 
+A **Pure Component** in React is a component that only re-renders when its **props** or **state** change. It is a more optimized version of the regular `React.Component` class, which performs a shallow comparison of **props** and **state** to determine if a re-render is necessary.
+
+### **Key Points:**
+- **Shallow Comparison**: Pure components perform a shallow comparison of the props and state to determine if a re-render is needed.
+- **Performance Optimization**: They help optimize performance by preventing unnecessary re-renders when the props and state haven't changed.
+- **Inheritance**: Pure components extend `React.PureComponent` instead of `React.Component`.
+
+### **Example:**
+```jsx
+import React, { PureComponent } from 'react';
+
+class MyComponent extends PureComponent {
+  render() {
+    return <h1>{this.props.name}</h1>;
+  }
+}
+
+   ```
    **Explanation:**  
    _[Your explanation here]_
 
@@ -315,8 +388,37 @@ function ChildComponent(props) {
 
 ## 13. What are refs in React?
    **Answer:**  
-   _[Your answer here]_
 
+In React, **Refs** (short for references) are used to directly interact with a **DOM element** or an **instance of a component**. They allow you to access and manipulate elements in ways that cannot be done through state or props.
+
+### **Key Points:**
+- **Accessing DOM Elements**: Refs provide a way to access the DOM nodes directly (e.g., for focus, measurements, animations).
+- **Immutable**: Refs are **mutable** but are not intended for dynamic data flow like state and props.
+- **Used for Non-UI Changes**: Ideal for actions like focusing an input field, triggering animations, or managing third-party integrations.
+
+### **How to Create Refs:**
+1. **Using `React.createRef()`** (for class components):
+   ```jsx
+   class MyComponent extends React.Component {
+     constructor(props) {
+       super(props);
+       this.myInput = React.createRef();
+     }
+
+     focusInput = () => {
+       this.myInput.current.focus();
+     };
+
+     render() {
+       return (
+         <div>
+           <input ref={this.myInput} />
+           <button onClick={this.focusInput}>Focus Input</button>
+         </div>
+       );
+     }
+   }
+    ```
    **Explanation:**  
    _[Your explanation here]_
 
@@ -324,8 +426,41 @@ function ChildComponent(props) {
 
 ## 14. What is meant by forward ref in React?
    **Answer:**  
-   _[Your answer here]_
 
+**Forward Ref** is a technique in React that allows you to pass a **ref** from a parent component to a child component, enabling the parent to directly access the child’s DOM or component instance. This is especially useful when the child component is a **functional component**, as functional components don’t have a `ref` by default.
+
+### **Key Points:**
+- **Forwarding Refs**: It allows a parent component to get a reference to a child component's DOM node or instance.
+- **Functional Components**: Normally, refs cannot be applied directly to functional components, but using `React.forwardRef()`, you can forward a ref to a child component’s DOM or instance.
+- **Use Case**: Typically used in component libraries or when building higher-order components (HOCs) that need to pass a ref to a DOM element.
+
+### **How to Use `forwardRef()`**:
+To use forward refs, you wrap the child component with `React.forwardRef()`, which takes the props and ref as arguments.
+
+#### Example:
+
+```jsx
+import React, { forwardRef } from 'react';
+
+const MyInput = forwardRef((props, ref) => {
+  return <input ref={ref} {...props} />;
+});
+
+function Parent() {
+  const inputRef = React.createRef();
+
+  const focusInput = () => {
+    inputRef.current.focus();
+  };
+
+  return (
+    <div>
+      <MyInput ref={inputRef} placeholder="Enter text" />
+      <button onClick={focusInput}>Focus Input</button>
+    </div>
+  );
+}
+ ```
    **Explanation:**  
    _[Your explanation here]_
 
